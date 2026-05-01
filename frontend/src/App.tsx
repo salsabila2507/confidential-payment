@@ -108,8 +108,7 @@ function App() {
       
       // Encrypt the amount
       const { handle, handleProof } = await handleClient
-        .encryptInput(CONTRACT_ADDRESS, await signer.getAddress())
-        .encrypt256(amount);
+        .encryptInput(amount, 'uint256', CONTRACT_ADDRESS);
       
       setStatus('Minting tokens...');
       const tx = await contract.mint(mintAddress, handle, handleProof);
@@ -141,8 +140,7 @@ function App() {
       
       // Encrypt the amount
       const { handle, handleProof } = await handleClient
-        .encryptInput(CONTRACT_ADDRESS, await signer.getAddress())
-        .encrypt256(amount);
+        .encryptInput(amount, 'uint256', CONTRACT_ADDRESS);
       
       setStatus('Transferring tokens...');
       const tx = await contract.transfer(transferAddress, handle, handleProof);
@@ -170,14 +168,18 @@ function App() {
       setLoading(true);
       setStatus('Fetching encrypted balance...');
       
-      // Get encrypted balance
-      const encryptedBalance = await contract.getBalance(account);
+      // Get encrypted balance handle via staticCall (nonpayable but we need return value)
+      const encryptedBalance = await contract.getBalance.staticCall(account);
       
       setStatus('Decrypting balance...');
       
       // Decrypt the balance
-      const decryptedValue = await handleClient.decrypt(encryptedBalance);
-      const balanceInEther = ethers.formatEther(decryptedValue);
+      const decryptedResult = await handleClient.decrypt(encryptedBalance);
+      // Nox SDK returns { solidityType, value } object
+      const rawValue = typeof decryptedResult === 'object' && decryptedResult !== null && 'value' in decryptedResult
+        ? BigInt(decryptedResult.value)
+        : BigInt(decryptedResult);
+      const balanceInEther = ethers.formatEther(rawValue);
       
       setBalance(balanceInEther);
       setStatus('Balance decrypted successfully!');
