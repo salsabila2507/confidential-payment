@@ -17,9 +17,9 @@ On-chain transactions are public by default — anyone can see balances and tran
 
 An ERC20-like token where balances are stored as `euint256` (encrypted uint256) from the Nox SDK.
 
-- `mint(address, encryptedAmount)` — owner mints encrypted tokens to an address
-- `transfer(address, encryptedAmount)` — transfer encrypted tokens
-- `getBalance(address)` — returns encrypted balance (ACL protected)
+- `mint(address, encryptedAmount)`  owner mints encrypted tokens to an address
+- `transfer(address, encryptedAmount)`  transfer encrypted tokens
+- `getBalance(address)`  returns encrypted balance (ACL protected)
 
 ### Frontend (`frontend/`)
 
@@ -65,7 +65,7 @@ Open `http://localhost:3000`.
 
 ## How it works
 
-When you send tokens, the amount is encrypted client-side using the Nox SDK before the transaction is broadcast. The contract operates on the encrypted value — the raw number never appears on-chain.
+When you send tokens, the amount is encrypted client-side using the Nox SDK before the transaction is broadcast. The contract operates on the encrypted value  the raw number never appears on-chain.
 
 ```typescript
 const handleClient = await createEthersHandleClient(signer);
