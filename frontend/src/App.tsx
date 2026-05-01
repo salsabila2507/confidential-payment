@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ethers } from 'ethers';
 import { createEthersHandleClient } from '@iexec-nox/handle';
 import contractABI from './contractABI.json';
@@ -6,7 +6,7 @@ import contractABI from './contractABI.json';
 // Arbitrum Sepolia configuration
 const CHAIN_ID = 421614;
 const CHAIN_NAME = 'Arbitrum Sepolia';
-const RPC_URL = 'https://sepolia-rollup.arbitrum.io/rpc';
+// const RPC_URL = 'https://sepolia-rollup.arbitrum.io/rpc';
 
 // Contract address - UPDATE THIS after deployment
 const CONTRACT_ADDRESS = '0x012C94A0278704f069C1BC20822832cd245BbC24';
@@ -20,7 +20,7 @@ declare const window: WindowWithEthereum;
 function App() {
   const [account, setAccount] = useState<string>('');
   const [connected, setConnected] = useState(false);
-  const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
+  const [_provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
   const [signer, setSigner] = useState<ethers.Signer | null>(null);
   const [contract, setContract] = useState<ethers.Contract | null>(null);
   const [handleClient, setHandleClient] = useState<any>(null);
@@ -68,7 +68,7 @@ function App() {
       const userSigner = await browserProvider.getSigner();
       const contractInstance = new ethers.Contract(
         CONTRACT_ADDRESS,
-        contractABI.abi,
+        (contractABI as any).abi ?? contractABI,
         userSigner
       );
       
@@ -454,9 +454,7 @@ function App() {
           color: '#0066ff'
         }}>
           <p style={{ margin: 0 }}>
-            <strong>Contract:</strong> {CONTRACT_ADDRESS === '0x0000000000000000000000000000000000000000' 
-              ? '⚠️ Not deployed yet - update CONTRACT_ADDRESS in App.tsx' 
-              : `${CONTRACT_ADDRESS.slice(0, 6)}...${CONTRACT_ADDRESS.slice(-4)}`}
+            <strong>Contract:</strong> {`${CONTRACT_ADDRESS.slice(0, 6)}...${CONTRACT_ADDRESS.slice(-4)}`}
           </p>
           <p style={{ margin: '0.5rem 0 0 0' }}>
             <strong>Network:</strong> {CHAIN_NAME} (Chain ID: {CHAIN_ID})
