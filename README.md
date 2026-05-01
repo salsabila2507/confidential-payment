@@ -135,4 +135,4 @@ This is a demo project. Feel free to fork and experiment!
 
 ---
 
-**Built with 👑 by King Airdrop**
+**Built with 👑 by 0xyas**
