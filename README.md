@@ -1,138 +1,100 @@
-# Confidential Payment 🔒
+# Confidential Payment
 
-A privacy-preserving ERC20-like token system built with **iExec Nox Protocol** using Fully Homomorphic Encryption (FHE).
+A privacy-preserving token transfer system built with iExec Nox Protocol using Fully Homomorphic Encryption (FHE) on Arbitrum Sepolia.
 
-## 🎯 What is This?
+## What is this?
 
-A confidential payment system where:
-- **All balances are encrypted** - no one can see how much you have
-- **Transfers are private** - transaction amounts are hidden
-- **Only you can decrypt** - ACL-protected balance viewing
-- **Fully on-chain** - all operations happen on encrypted data
+On-chain transactions are public by default — anyone can see balances and transfer amounts. This project changes that. Balances and transfer amounts are fully encrypted on-chain using FHE, so only the authorized parties can read the actual numbers.
 
-## 🏗️ Architecture
+- Balances are encrypted — no one can see how much you hold
+- Transfer amounts are hidden from public view
+- Only the account owner can decrypt their own balance
+- Everything runs on-chain, no off-chain workarounds
+
+## Architecture
 
 ### Smart Contract (`contracts/ConfidentialPayment.sol`)
-- Confidential ERC20-like token
-- Encrypted balances using `euint256` from Nox SDK
-- Functions:
-  - `mint(address, encryptedAmount)` - Owner mints encrypted tokens
-  - `transfer(address, encryptedAmount)` - Transfer encrypted amounts
-  - `getBalance(address)` - Get encrypted balance (ACL protected)
+
+An ERC20-like token where balances are stored as `euint256` (encrypted uint256) from the Nox SDK.
+
+- `mint(address, encryptedAmount)` — owner mints encrypted tokens to an address
+- `transfer(address, encryptedAmount)` — transfer encrypted tokens
+- `getBalance(address)` — returns encrypted balance (ACL protected)
 
 ### Frontend (`frontend/`)
-- React + Vite + TypeScript
-- Ethers.js v6 for blockchain interaction
-- `@iexec-nox/handle` SDK for encryption/decryption
-- MetaMask integration
 
-## 🚀 Quick Start
+React + Vite + TypeScript app with MetaMask integration. Uses `@iexec-nox/handle` for client-side encryption and decryption.
 
-### 1. Install Dependencies
+## Getting Started
 
-**Backend:**
+### Install dependencies
+
 ```bash
 npm install
 ```
 
-**Frontend:**
 ```bash
 cd frontend
 npm install
 ```
 
-### 2. Configure Environment
+### Configure environment
 
-Create `.env` in root:
+Create `.env` in the root directory:
+
 ```env
 PRIVATE_KEY=your_private_key_here
 ARBITRUM_SEPOLIA_RPC=https://sepolia-rollup.arbitrum.io/rpc
 ```
 
-### 3. Compile Contract
+### Compile and deploy
 
 ```bash
 npx hardhat compile
-```
-
-### 4. Deploy to Arbitrum Sepolia
-
-```bash
 npx hardhat run scripts/deploy.ts --network arbitrumSepolia
 ```
 
-### 5. Run Frontend
+### Run the frontend
 
 ```bash
 cd frontend
 npm run dev
 ```
 
-Visit `http://localhost:3000`
+Open `http://localhost:3000`.
 
-## 🔐 How It Works
+## How it works
 
-### Encryption Flow
-1. **User encrypts input** → `handleClient.encryptInput(amount)`
-2. **Get handle + proof** → Send to Handle Gateway
-3. **Submit to contract** → Contract verifies and operates on encrypted data
-4. **Decrypt result** → Only authorized users can decrypt via ACL
-
-### Smart Contract Operations
-
-```solidity
-// Mint encrypted tokens (owner only)
-function mint(address to, externalEuint256 calldata encryptedAmount)
-
-// Transfer encrypted tokens
-function transfer(address to, externalEuint256 calldata encryptedAmount)
-
-// Get encrypted balance (ACL protected)
-function getBalance(address account) returns (euint256)
-```
-
-### Frontend Integration
+When you send tokens, the amount is encrypted client-side using the Nox SDK before the transaction is broadcast. The contract operates on the encrypted value — the raw number never appears on-chain.
 
 ```typescript
-import { createEthersHandleClient } from '@iexec-nox/handle';
-
-// Initialize Handle client
 const handleClient = await createEthersHandleClient(signer);
 
-// Encrypt amount
+// Encrypt the amount before sending
 const { handle, handleProof } = await handleClient.encryptInput(amount);
 
-// Send to contract
+// Contract receives encrypted data only
 await contract.transfer(recipient, { handle, handleProof });
 
-// Decrypt balance (if you have permission)
+// Decrypt your own balance
 const encryptedBalance = await contract.getBalance(myAddress);
 const decryptedBalance = await handleClient.decrypt(encryptedBalance);
 ```
 
-## 📦 Tech Stack
+## Tech Stack
 
-- **Blockchain:** Arbitrum Sepolia (testnet)
-- **FHE:** iExec Nox Protocol
-- **Smart Contracts:** Solidity 0.8.24
-- **Framework:** Hardhat
-- **Frontend:** React + Vite + TypeScript
-- **Web3:** Ethers.js v6
+- Arbitrum Sepolia (testnet)
+- iExec Nox Protocol (FHE)
+- Solidity 0.8.27
+- Hardhat
+- React + Vite + TypeScript
+- Ethers.js v6
 
-## 🔗 Resources
+## Live Demo
 
-- [iExec Nox Protocol Docs](https://docs.iex.ec/for-developers/confidential-computing/nox-protocol)
-- [Nox SDK Reference](https://github.com/iExecBlockchainComputing/nox-protocol-contracts)
-- [Arbitrum Sepolia Explorer](https://sepolia.arbiscan.io/)
+- Frontend: https://frontend-one-sigma-14.vercel.app
+- Contract: `0x012C94A0278704f069C1BC20822832cd245BbC24` on Arbitrum Sepolia
 
-## 📝 License
+## License
 
 MIT
-
-## 🤝 Contributing
-
-This is a demo project. Feel free to fork and experiment!
-
----
-
-**Built with 👑 by 0xyas**
