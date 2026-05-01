@@ -93,7 +93,7 @@ const decryptedBalance = await handleClient.decrypt(encryptedBalance);
 ## Live Demo
 
 - Frontend: https://frontend-one-sigma-14.vercel.app
-- Contract: `0x012C94A0278704f069C1BC20822832cd245BbC24` on Arbitrum Sepolia
+- Contract: `0xeBbb16274635C5627921dAD99c4E4BcB2eD97eE2` on Arbitrum Sepolia
 
 ## License
 

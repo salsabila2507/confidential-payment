@@ -9,7 +9,7 @@ const CHAIN_NAME = 'Arbitrum Sepolia';
 // const RPC_URL = 'https://sepolia-rollup.arbitrum.io/rpc';
 
 // Contract address - UPDATE THIS after deployment
-const CONTRACT_ADDRESS = '0x012C94A0278704f069C1BC20822832cd245BbC24';
+const CONTRACT_ADDRESS = '0xeBbb16274635C5627921dAD99c4E4BcB2eD97eE2';
 
 interface WindowWithEthereum extends Window {
   ethereum?: any;
